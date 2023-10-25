@@ -21,17 +21,18 @@ class CameraGroup(pygame.sprite.Group):
         self.half_height = self.display_surface.get_height() // 2
 
         # zoom
-        self.zoom_scale = 5
+        self.zoom_scale = 1
         self.internal_surface_size = (1280, 720)
         self.internal_surface = pygame.Surface(self.internal_surface_size, pygame.SRCALPHA)
         self.internal_rect = self.internal_surface.get_rect(center = (self.half_width, self.half_height))
         self.internal_surface_size_vector = pygame.math.Vector2(self.internal_surface_size)
 
     def center_target_camera(self, target):
-        self.offset.x = target.player_x - self.half_width
-        self.offset.y = target.player_y - self.half_height
+        self.offset.x = target.player_x - self.half_width + 15
+        self.offset.y = target.player_y - self.half_height + 20
 
     def custom_draw(self):
+        print(self.offset)
         # setup the game camera
         self.internal_surface.fill('#8fde5d')
         self.center_target_camera(char)
