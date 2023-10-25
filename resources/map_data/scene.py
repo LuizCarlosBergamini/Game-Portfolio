@@ -2,7 +2,7 @@ import pygame
 import pytmx
 
 
-class Scene(pygame.sprite.Group):
+class Scene(pygame.sprite.Sprite):
     def __init__(self, group):
         super().__init__(group)
         self.layers = {}

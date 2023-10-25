@@ -15,15 +15,41 @@ class CameraGroup(pygame.sprite.Group):
         super().__init__()
         self.display_surface = pygame.display.get_surface()
 
+        # camera offset
+        self.offset = pygame.math.Vector2(0, 0)
+        self.half_width = self.display_surface.get_width() // 2
+        self.half_height = self.display_surface.get_height() // 2
+
+        # zoom
+        self.zoom_scale = 5
+        self.internal_surface_size = (1280, 720)
+        self.internal_surface = pygame.Surface(self.internal_surface_size, pygame.SRCALPHA)
+        self.internal_rect = self.internal_surface.get_rect(center = (self.half_width, self.half_height))
+        self.internal_surface_size_vector = pygame.math.Vector2(self.internal_surface_size)
+
+    def center_target_camera(self, target):
+        self.offset.x = target.player_x - self.half_width
+        self.offset.y = target.player_y - self.half_height
+
     def custom_draw(self):
+        # setup the game camera
+        self.internal_surface.fill('#8fde5d')
+        self.center_target_camera(char)
+
         for layer_name, layer in scene.load_map().items():
             if isinstance(layer, pytmx.TiledTileLayer):
                 for x, y, image in layer.tiles():
-                    self.display_surface.blit(image, (x * scene.tmx_data.tilewidth,
-                                                      y * scene.tmx_data.tileheight))
-        
+                    self.internal_surface.blit(image, ((x * scene.tmx_data.tilewidth,
+                                                      y * scene.tmx_data.tileheight) - self.offset))
+                    
         # check that the action is a valid key in the animation dictionary
-        screen.blit(char.animation()[action][frame], (char.player_x, char.player_y))
+        self.internal_surface.blit(char.animation()[action][frame], ((char.player_x, char.player_y) - self.offset))
+
+        #scales the game surface
+        scaled_surface = pygame.transform.scale(
+            self.internal_surface, self.internal_surface_size_vector * self.zoom_scale)
+        scaled_rect = scaled_surface.get_rect(center = (self.half_width, self.half_height))
+        self.display_surface.blit(scaled_surface, scaled_rect)
 
 action = 'idle'	
 camera_group = CameraGroup()
@@ -32,10 +58,11 @@ scene = Scene(camera_group)
 # loads the map for posterior drawing
 scene.load_map()
 # character setup
-char = Character(0, 0, camera_group)
-char.def_animation_list(2)
+char = Character(360, 38, camera_group)
+direction = 2
 # checks if some key is pressed
 key_is_pressed = False
+last_key_pressed = None
 
 while running:
     # poll for events
@@ -48,22 +75,30 @@ while running:
                 action = 'walk'
                 key_is_pressed = True
                 scene.animation_cooldown = 100
-                char.def_animation_list(3)                
+                direction = 3
+                last_key_pressed = 'w'
             elif event.key == pygame.K_a:
                 action = 'walk'
                 key_is_pressed = True
                 scene.animation_cooldown = 100
-                char.def_animation_list(1)                
+                direction = 1
+                last_key_pressed = 'a'         
             elif event.key == pygame.K_s:
                 action = 'walk'
                 key_is_pressed = True
                 scene.animation_cooldown = 100
-                char.def_animation_list(2)                
+                direction = 2
+                last_key_pressed = 's'             
             elif event.key == pygame.K_d:
                 action = 'walk'
                 key_is_pressed = True
                 scene.animation_cooldown = 100
-                char.def_animation_list(0)
+                direction = 0
+                last_key_pressed = 'd'
+            elif event.key == pygame.K_LSHIFT and key_is_pressed:
+                action = 'running'
+                scene.animation_cooldown = 100
+                char.vel = 6
                 
 
         elif event.type == pygame.KEYUP:
@@ -71,31 +106,49 @@ while running:
                 action = 'idle'
                 key_is_pressed = False
                 scene.animation_cooldown = 300
-                char.def_animation_list(3)
+                direction = 3
             elif event.key == pygame.K_a:
                 action = 'idle'
                 key_is_pressed = False
                 scene.animation_cooldown = 300
-                char.def_animation_list(1)
+                direction = 1
             elif event.key == pygame.K_s:
                 action = 'idle'
                 key_is_pressed = False
                 scene.animation_cooldown = 300
-                char.def_animation_list(2)
+                direction = 2
             elif event.key == pygame.K_d:
                 action = 'idle'
                 key_is_pressed = False
                 scene.animation_cooldown = 300
-                char.def_animation_list(0)
+                direction = 0
+            elif event.key == pygame.K_LSHIFT:
+                action = 'walk'
+                scene.animation_cooldown = 100
+                char.vel = 3
 
     # fill the screen with a color to wipe away anything from last frame
-    screen.fill("purple")
+    screen.fill("#8fde5d")
+
+    # update the direction of character animation
+    char.def_animation_list(direction)
 
     # update animation
     frame = scene.handle_animations(char, action)
 
     # ensures that the frame index is not greater than the number of frames in the animation
     frame %= len(char.animation()[action])
+
+    # handle character movement
+    if key_is_pressed:
+        if last_key_pressed == 'w':
+            char.move_up()
+        elif last_key_pressed == 'a':
+            char.move_left()
+        elif last_key_pressed == 's':
+            char.move_down()
+        elif last_key_pressed == 'd':
+            char.move_right()
 
     # RENDER YOUR GAME HERE
     camera_group.custom_draw()
