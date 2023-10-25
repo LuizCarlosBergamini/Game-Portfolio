@@ -10,7 +10,7 @@ class Character(pygame.sprite.Sprite):
         self.vel = 5
         self.sheet = Spritesheet()
         self.animation_list = {}
-        self.animation_steps = {'idle': 2, 'walk': 24}
+        self.animation_steps = {'idle': 2, 'walk': 6}
         self.direction_list = {'idle': [0, 2, 4, 6], 'walk': [0, 6, 12, 18]}
         self.step_counter = 0
         self.character_animations = {
@@ -23,19 +23,19 @@ class Character(pygame.sprite.Sprite):
     def sprite(self, animation_type):
         character_sprite = {}
         character_sprite[animation_type] = self.character_animations[animation_type]
-        print(character_sprite)
         return character_sprite
 
-    def def_animation_list(self, animation_type, facing_direction):
+    def def_animation_list(self, facing_direction):
         for key, value in self.animation_steps.items():
             temp_img_list = []
             for i in range(value):
                 temp_img_list.append(self.sheet.get_image(
-                    self.sprite(f"{key}")[animation_type],
-                    self.step_counter, 32, 32, 10, 'azure4', self.direction_list[animation_type][facing_direction]))
+                    self.sprite(f"{key}")[key],
+                    self.step_counter, 32, 32, 10, 'azure4', self.direction_list[key][facing_direction]))
                 self.step_counter += 1
             self.step_counter = 0
-            self.animation_list[animation_type] = temp_img_list
+            self.animation_list[key] = temp_img_list
+            print(self.animation_list[key])
 
     def animation(self):
         return self.animation_list

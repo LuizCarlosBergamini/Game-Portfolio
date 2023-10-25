@@ -21,10 +21,11 @@ class CameraGroup(pygame.sprite.Group):
                 for x, y, image in layer.tiles():
                     self.display_surface.blit(image, (x * scene.tmx_data.tilewidth,
                                                       y * scene.tmx_data.tileheight))
-        self.display_surface.blit(
-            char.animation()['idle'][frame], (char.player_x, char.player_y))
+        
+        # check that the action is a valid key in the animation dictionary
+        screen.blit(char.animation()[action][frame], (char.player_x, char.player_y))
 
-
+action = 'idle'	
 camera_group = CameraGroup()
 # scene setup
 scene = Scene(camera_group)
@@ -32,7 +33,9 @@ scene = Scene(camera_group)
 scene.load_map()
 # character setup
 char = Character(0, 0, camera_group)
-char.def_animation_list('idle', 2)
+char.def_animation_list(2)
+# checks if some key is pressed
+key_is_pressed = False
 
 while running:
     # poll for events
@@ -42,19 +45,57 @@ while running:
             running = False
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_w:
-                char.def_animation_list('idle', 3)
+                action = 'walk'
+                key_is_pressed = True
+                scene.animation_cooldown = 100
+                char.def_animation_list(3)                
             elif event.key == pygame.K_a:
-                char.def_animation_list('idle', 1)
+                action = 'walk'
+                key_is_pressed = True
+                scene.animation_cooldown = 100
+                char.def_animation_list(1)                
             elif event.key == pygame.K_s:
-                char.def_animation_list('idle', 2)
+                action = 'walk'
+                key_is_pressed = True
+                scene.animation_cooldown = 100
+                char.def_animation_list(2)                
             elif event.key == pygame.K_d:
-                char.def_animation_list('idle', 0)
+                action = 'walk'
+                key_is_pressed = True
+                scene.animation_cooldown = 100
+                char.def_animation_list(0)
+                
+
+        elif event.type == pygame.KEYUP:
+            if event.key == pygame.K_w:
+                action = 'idle'
+                key_is_pressed = False
+                scene.animation_cooldown = 300
+                char.def_animation_list(3)
+            elif event.key == pygame.K_a:
+                action = 'idle'
+                key_is_pressed = False
+                scene.animation_cooldown = 300
+                char.def_animation_list(1)
+            elif event.key == pygame.K_s:
+                action = 'idle'
+                key_is_pressed = False
+                scene.animation_cooldown = 300
+                char.def_animation_list(2)
+            elif event.key == pygame.K_d:
+                action = 'idle'
+                key_is_pressed = False
+                scene.animation_cooldown = 300
+                char.def_animation_list(0)
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("purple")
 
     # update animation
-    frame = scene.handle_animations(char, 'idle')
+    frame = scene.handle_animations(char, action)
+
+    # ensures that the frame index is not greater than the number of frames in the animation
+    frame %= len(char.animation()[action])
 
     # RENDER YOUR GAME HERE
     camera_group.custom_draw()
