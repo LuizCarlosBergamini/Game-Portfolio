@@ -17,7 +17,7 @@ class Character(pygame.sprite.Sprite):
             'walk': pygame.image.load(
                 'resources\character\walking_spredsheet.png').convert_alpha(),
             'idle': pygame.image.load(
-                'idle_2x.png').convert_alpha(),
+                'resources/character/idle_spredsheet front.png').convert_alpha(),
             'running': pygame.image.load(
                 'resources/character/running_spredsheet.png').convert_alpha(),
         }
@@ -33,7 +33,7 @@ class Character(pygame.sprite.Sprite):
             for i in range(value):
                 temp_img_list.append(self.sheet.get_image(
                     self.sprite(f"{key}")[key],
-                    self.step_counter, 64, 64, 1, 'azure4', self.direction_list[key][facing_direction]))
+                    self.step_counter, 32, 32, 1, 'azure4', self.direction_list[key][facing_direction]))
                 self.step_counter += 1
             self.step_counter = 0
             self.animation_list[key] = temp_img_list

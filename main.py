@@ -21,7 +21,7 @@ class CameraGroup(pygame.sprite.Group):
         self.half_height = self.display_surface.get_height() // 2
 
         # zoom
-        self.zoom_scale = 1
+        self.zoom_scale = 3
         self.internal_surface_size = (1280, 720)
         self.internal_surface = pygame.Surface(self.internal_surface_size, pygame.SRCALPHA)
         self.internal_rect = self.internal_surface.get_rect(center = (self.half_width, self.half_height))
@@ -31,7 +31,7 @@ class CameraGroup(pygame.sprite.Group):
         self.offset.x = target.player_x - self.half_width + 15
         self.offset.y = target.player_y - self.half_height + 20
 
-    def custom_draw(self):
+    def custom_draw(self, mask_image):
         print(self.offset)
         # setup the game camera
         self.internal_surface.fill('#8fde5d')
@@ -45,6 +45,8 @@ class CameraGroup(pygame.sprite.Group):
                     
         # check that the action is a valid key in the animation dictionary
         self.internal_surface.blit(char.animation()[action][frame], ((char.player_x, char.player_y) - self.offset))
+
+        self.internal_surface.blit(mask_image, (0, 0))
 
         #scales the game surface
         scaled_surface = pygame.transform.scale(
@@ -137,6 +139,11 @@ while running:
     # update animation
     frame = scene.handle_animations(char, action)
 
+    # handle player masks for collision
+    char_rect = char.character_animations[action].get_rect()
+    char_mask = pygame.mask.from_surface(char.character_animations[action])
+    mask_image = char_mask.to_surface()
+
     # ensures that the frame index is not greater than the number of frames in the animation
     frame %= len(char.animation()[action])
 
@@ -152,7 +159,7 @@ while running:
             char.move_right()
 
     # RENDER YOUR GAME HERE
-    camera_group.custom_draw()
+    camera_group.custom_draw(mask_image)
 
     # flip() the display to put your work on screen
     pygame.display.flip()
