@@ -32,7 +32,6 @@ class CameraGroup(pygame.sprite.Group):
         self.offset.y = target.player_y - self.half_height + 20
 
     def custom_draw(self, mask_image):
-        print(self.offset)
         # setup the game camera
         self.internal_surface.fill('#8fde5d')
         self.center_target_camera(char)
