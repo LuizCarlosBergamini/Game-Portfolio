@@ -3,11 +3,15 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "walking_spredsheet.tmx",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
+        "character_premade_02_walk.tsx": {
+            "scaleInDock": 3,
+            "scaleInEditor": 1
+        },
         "idle_spredsheet front.tmx": {
             "scale": 9.522265625,
             "selectedLayer": 0,
@@ -19,6 +23,14 @@
         "spredsheet character.tsx": {
             "scaleInDock": 8,
             "scaleInEditor": 5.5
+        },
+        "walking_spredsheet.tmx": {
+            "scale": 1.5870442708333334,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 384.04725766090985,
+                "y": 16.38265578208967
+            }
         }
     },
     "last.imagePath": "C:/Users/carlo/OneDrive/Área de Trabalho/SmallBurg_village_pack_v3.2_free/premades/premade_02",
@@ -28,9 +40,13 @@
     "map.tileWidth": 16,
     "map.width": 48,
     "openFiles": [
+        "walking_spredsheet.tmx",
+        "character_premade_02_walk.tsx"
     ],
     "project": "character_spredsheets.tiled-project",
     "recentFiles": [
+        "character_premade_02_walk.tsx",
+        "walking_spredsheet.tmx",
         "idle_spredsheet front.tmx",
         "spredsheet character.tsx"
     ],
