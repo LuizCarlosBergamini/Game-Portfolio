@@ -7,11 +7,12 @@ class Character(pygame.sprite.Sprite):
         super().__init__(group)
         self.player_x = x
         self.player_y = y
-        self.vel = 3
+        self.vel = 1
         self.sheet = Spritesheet()
         self.animation_list = {}
         self.animation_steps = {'idle': 2, 'walk': 6, 'running': 4}
-        self.direction_list = {'idle': [0, 2, 4, 6], 'walk': [0, 6, 12, 18], 'running': [0, 4, 8, 12]}
+        self.direction_list = {'idle': [0, 2, 4, 6], 'walk': [
+            0, 6, 12, 18], 'running': [0, 4, 8, 12]}
         self.step_counter = 0
         self.character_animations = {
             'walk': pygame.image.load(
