@@ -6,6 +6,7 @@ from resources.map_data.scene import Scene
 class CameraGroup(pygame.sprite.Group):
     def __init__(self):
         super().__init__()
+        # display setup
         self.display_surface = pygame.display.get_surface()
         self.scene = Scene(self)
         self.action = 'idle'
@@ -16,7 +17,7 @@ class CameraGroup(pygame.sprite.Group):
         self.half_height = self.display_surface.get_height() // 2
 
         # zoom
-        self.zoom_scale = 1
+        self.zoom_scale = 4
         self.internal_surface_size = (1280, 720)
         self.internal_surface = pygame.Surface(
             self.internal_surface_size, pygame.SRCALPHA)
@@ -29,7 +30,7 @@ class CameraGroup(pygame.sprite.Group):
         self.offset.x = target.player_x - self.half_width + 15
         self.offset.y = target.player_y - self.half_height + 20
 
-    def custom_draw(self, frame, char, collision_handler):
+    def custom_draw(self, frame, char, collision_handler, scene):
         # setup the game camera
         self.internal_surface.fill('#8fde5d')
         self.center_target_camera(char)
@@ -40,12 +41,16 @@ class CameraGroup(pygame.sprite.Group):
                     self.internal_surface.blit(image, ((x * self.scene.tmx_data.tilewidth,
                                                         y * self.scene.tmx_data.tileheight) - self.offset))
 
-        char_pos = (char.player_x, char.player_y) - self.offset
+        # check that the action is a valid key in the animation dictionary
+        self.internal_surface.blit(
+            char.animation()[self.action][frame], (char.player_x, char.player_y) - self.offset)
 
-        pygame.draw.rect(self.internal_surface, 'red', collision_handler.player_rect)
+        # print the collision boxes
+        # pygame.draw.rect(self.internal_surface, 'red',
+        #                  collision_handler.player_rect)
 
-        #check that the action is a valid key in the animation dictionary
-        self.internal_surface.blit(char.animation()[self.action][frame], (char_pos))
+        # for rect in collision_handler.collision_map_layer():
+        #     pygame.draw.rect(self.internal_surface, 'red', rect)
 
         # scales the game surface
         scaled_surface = pygame.transform.scale(

@@ -22,6 +22,7 @@ direction = 2
 # checks if some key is pressed
 key_is_pressed = False
 last_key_pressed = None
+shift_pressed = False
 # setup collision handler
 collision_handler = CollisionHandler(camera_group, char)
 
@@ -59,7 +60,8 @@ while running:
             elif event.key == pygame.K_LSHIFT and key_is_pressed:
                 camera_group.action = 'running'
                 scene.animation_cooldown = 100
-                char.vel = 2
+                char.vel = 4
+                shift_pressed = True
 
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_w:
@@ -85,10 +87,16 @@ while running:
             elif event.key == pygame.K_LSHIFT:
                 camera_group.action = 'walk'
                 scene.animation_cooldown = 100
-                char.vel = 1
+                char.vel = 2
+                shift_pressed = False
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("#8fde5d")
+
+    # update the collision box position
+    collision_handler.update_player_collision_box()
+    # checks for collision
+    collision_handler.check_collision(shift_pressed, direction)
 
     # update the direction of character animation
     char.def_animation_list(direction)
@@ -111,7 +119,7 @@ while running:
             char.move_right()
 
     # RENDER YOUR GAME HERE
-    camera_group.custom_draw(frame, char, collision_handler)
+    camera_group.custom_draw(frame, char, collision_handler, scene)
 
     # flip() the display to put your work on screen
     pygame.display.flip()

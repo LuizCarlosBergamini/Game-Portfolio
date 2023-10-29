@@ -7,7 +7,7 @@ class Character(pygame.sprite.Sprite):
         super().__init__(group)
         self.player_x = x
         self.player_y = y
-        self.vel = 1
+        self.vel = 2
         self.sheet = Spritesheet()
         self.animation_list = {}
         self.animation_steps = {'idle': 2, 'walk': 6, 'running': 4}
@@ -53,3 +53,14 @@ class Character(pygame.sprite.Sprite):
 
     def move_down(self):
         self.player_y += self.vel
+
+
+class NPC(pygame.sprite.Sprite):
+    def __init__(self, group):
+        super().__init__(group)
+        self.sheet = Spritesheet()
+        self.npc_idle = pygame.image.load(
+            'resources/character/idle spredsheet old vendor.png').convert_alpha()
+        
+    def animation():
+
