@@ -55,33 +55,4 @@ class CollisionHandler:
                             self.char.player_y += 2
                         return
 
-                # collision with the left side of the rect
-                # if abs(rect.left - self.player_rect.right) < collision_tolerance and not shift_pressed and not colliding:
-                #     self.char.player_x -= 2
-                #     return
-                # elif abs(rect.left - self.player_rect.right) < collision_tolerance and shift_pressed and not colliding:
-                #     self.char.player_x -= 4
-                #     return
-                # # collision with the right side of the rect
-                # elif abs(rect.right - self.player_rect.left) < collision_tolerance and not shift_pressed:
-                #     self.char.player_x += 2
-                #     return
-                # elif abs(rect.right - self.player_rect.left) < collision_tolerance and shift_pressed:
-                #     self.char.player_x += 4
-                #     return
-                # # collision with the top of the rect
-                # elif abs(rect.top - self.player_rect.bottom) < collision_tolerance and not shift_pressed:
-                #     self.char.player_y -= 2
-                #     return
-                # elif abs(rect.top - self.player_rect.bottom) < collision_tolerance and shift_pressed:
-                #     self.char.player_y -= 4
-                #     return
-                # # collision with the bottom of the rect
-                # elif abs(rect.bottom - self.player_rect.top) < collision_tolerance and not shift_pressed:
-                #     self.char.player_y += 2
-                #     return
-                # elif abs(rect.bottom - self.player_rect.top) < collision_tolerance and shift_pressed:
-                #     self.char.player_y += 4
-                #     return
-
         return False

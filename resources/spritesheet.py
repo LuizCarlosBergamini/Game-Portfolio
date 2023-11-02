@@ -1,4 +1,5 @@
 import pygame
+from functools import cache
 
 
 class Spritesheet:
