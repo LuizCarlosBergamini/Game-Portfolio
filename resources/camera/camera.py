@@ -18,16 +18,16 @@ class CameraGroup(pygame.sprite.Group):
         self.half_height = self.display_surface.get_height() // 2
 
         # zoom
-        self.zoom_scale = 3.5
+        self.zoom_scale = 4
         self.surface_size = (1280, 720)
         self.map_surface = pygame.Surface(
             self.surface_size, pygame.SRCALPHA)
-        
+
         # market surface
         self.market_surface = pygame.Surface(
             self.surface_size, pygame.SRCALPHA)
-        
-        #player surface
+
+        # player surface
         self.player_surface = pygame.Surface(
             self.surface_size, pygame.SRCALPHA)
         self.player_surface.set_colorkey((0, 0, 0))
@@ -46,83 +46,86 @@ class CameraGroup(pygame.sprite.Group):
             center=(self.half_width, self.half_height))
         self.surface_size_vector = pygame.math.Vector2(
             self.surface_size)
-        
-        self.scaled_player_surface = pygame.Surface(self.surface_size_vector * self.zoom_scale)
+
+        self.scaled_player_surface = pygame.Surface(
+            self.surface_size_vector * self.zoom_scale)
         self.scaled_player_surface.set_colorkey((0, 0, 0))
 
     def center_target_camera(self, target):
         self.offset.x = target.player_x - self.half_width + 15
         self.offset.y = target.player_y - self.half_height + 20
 
-    
-    def scale_map(self):
+    def scale_map(self, collision_handler):
         # draw map
         for layer_name, layer in self.scene.load_map().items():
             if isinstance(layer, pytmx.TiledTileLayer):
                 for x, y, image in layer.tiles():
                     self.map_surface.blit(image, ((x * self.scene.tmx_data.tilewidth,
-                                                y * self.scene.tmx_data.tileheight)))
+                                                   y * self.scene.tmx_data.tileheight) - self.offset))
+
+        # for rect in collision_handler.collision_map_layer():
+        #     pygame.draw.rect(self.map_surface, (255, 0, 0),
+        #                      rect)
 
         scaled_surface = pygame.transform.scale(
             self.map_surface, self.surface_size_vector * self.zoom_scale)
-        print(scaled_surface)
         scaled_rect = scaled_surface.get_rect(
             center=(self.half_width, self.half_height))
-        print(scaled_rect)
-        
+
         return scaled_surface, scaled_rect
-    
+
     def scale_market(self, vegetalMarket):
         # Vegetables Market
         for x, y, image in vegetalMarket.get_tile_image().tiles():
             self.market_surface.blit(image, ((x * vegetalMarket.tmx_data.tilewidth,
-                                            y * vegetalMarket.tmx_data.tileheight)))
-            
+                                              y * vegetalMarket.tmx_data.tileheight)))
+
         scaled_surface = pygame.transform.scale(
             self.market_surface, self.surface_size_vector * self.zoom_scale)
         scaled_rect = scaled_surface.get_rect(
             center=(self.half_width, self.half_height))
-        
+
         return scaled_surface, scaled_rect
-    
+
     def scale_npc(self, npc):
         # NPC
         self.npc_surface.blit(
             npc.animation(), (438, 160) - self.offset)
-        
 
         scaled_surface = pygame.transform.scale(
             self.npc_surface, self.surface_size_vector * self.zoom_scale)
         scaled_rect = scaled_surface.get_rect(
             center=(self.half_width, self.half_height))
-        
+
         return scaled_surface, scaled_rect
 
-    def custom_draw(self, screen, frame, char, npc, fps, vegetalMarket):
+    def custom_draw(self, screen, frame, char, fps, collision_handler):
 
-        print(f"char.player_x: {char.player_x}, char.player_y: {char.player_y}")
+        print(
+            f"char.player_x: {char.player_x}, char.player_y: {char.player_y}")
         # setup the game camera
         self.center_target_camera(char)
         self.player_surface.fill((0, 0, 0, 0))
-        
-        
+
         # prints the player in the self.player_surface
         self.player_surface.blit(
             char.animation()[self.action][frame], (char.player_x, char.player_y) - self.offset)
-        
+
+        # # draw rectangle for collision box of the player
+        # pygame.draw.rect(self.player_surface, (255, 0, 0),
+        #                  collision_handler.player_rect)
+
         # ----- foreground objects block -----
 
-
         # ----- foreground objects block -----
 
-        
         # show fps
-        screen.blit(fps, (char.player_x - 10, char.player_y - 50) - self.offset)
+        screen.blit(fps, (char.player_x - 10,
+                    char.player_y - 50) - self.offset)
 
         pygame.transform.scale(
             self.player_surface, self.surface_size_vector * self.zoom_scale, self.scaled_player_surface)
         scaled_rect = self.scaled_player_surface.get_rect(
             center=(self.half_width, self.half_height))
-        screen.blit(self.scaled_player_surface, (scaled_rect.x, scaled_rect.y))
-
-        
+        screen.blit(self.scaled_player_surface,
+                    (scaled_rect.x, scaled_rect.y))

@@ -18,7 +18,7 @@ scene = Scene(camera_group)
 # loads the map for posterior drawing
 scene.load_map()
 # character setup
-char = Character(-300, -722, camera_group)
+char = Character(-435, -872, camera_group)
 direction = 2
 # checks if some key is pressed
 key_is_pressed = False
@@ -30,10 +30,15 @@ collision_handler = CollisionHandler(camera_group, char)
 npc = NPC(camera_group)
 # buildings setup
 vegetalMarket = VegetablesMarket(camera_group)
-#create a font variable
+# create a font variable
 font = pygame.font.Font('freesansbold.ttf', 16)
 
-scaled_map, scaled_rect = camera_group.scale_map()
+collision_handler.collision_map_layer()
+
+collision_handler.collision_rects[0].x += 16
+collision_handler.collision_rects[0].y += 16
+
+scaled_map, scaled_rect = camera_group.scale_map(collision_handler)
 scaled_market, scaled_market_rect = camera_group.scale_market(vegetalMarket)
 scaled_npcs, scaled_npcs_rect = camera_group.scale_npc(npc)
 
@@ -71,7 +76,7 @@ while running:
             elif event.key == pygame.K_LSHIFT and key_is_pressed:
                 camera_group.action = 'running'
                 scene.animation_cooldown = 100
-                char.vel = 10
+                char.vel = 6
                 shift_pressed = True
 
         elif event.type == pygame.KEYUP:
@@ -98,10 +103,9 @@ while running:
             elif event.key == pygame.K_LSHIFT:
                 camera_group.action = 'walk'
                 scene.animation_cooldown = 100
-                char.vel = 5
+                char.vel = 3
                 shift_pressed = False
 
-    
     # draw the fps on the screen
     fps = clock.get_fps()
     fps_text = font.render(f"FPS: {fps:.2f}", True, (255, 255, 255))
@@ -111,8 +115,6 @@ while running:
 
     # update the collision box position
     collision_handler.update_player_collision_box()
-    # checks for collision
-    # collision_handler.check_collision(shift_pressed, direction)
 
     # update the direction of character animation
     char.def_animation_list(direction)
@@ -134,25 +136,26 @@ while running:
         elif last_key_pressed == 'd':
             char.move_right()
 
+    # checks for collision
+    collision_handler.check_collision(shift_pressed, direction)
+
     # RENDER YOUR GAME HERE
-    screen.blit(scaled_map, (scaled_rect.x, scaled_rect.y) - camera_group.offset)
+    screen.blit(scaled_map, (scaled_rect.x, scaled_rect.y) -
+                camera_group.offset)
 
     # prints the npcs
-    screen.blit(scaled_npcs, (scaled_npcs_rect.x, scaled_npcs_rect.y) - camera_group.offset)
+    screen.blit(scaled_npcs, (scaled_npcs_rect.x,
+                scaled_npcs_rect.y) - camera_group.offset)
 
     # prints the markets
-    screen.blit(scaled_market, (scaled_market_rect.x, scaled_market_rect.y) - camera_group.offset)
+    screen.blit(scaled_market, (scaled_market_rect.x,
+                scaled_market_rect.y) - camera_group.offset)
 
-    camera_group.custom_draw(screen, frame, char, npc, fps_text, vegetalMarket)
-
-     
+    camera_group.custom_draw(screen, frame, char, fps_text, collision_handler)
 
     # flip() the display to put your work on screen
     pygame.display.update()
 
-    clock.tick(30)
+    clock.tick(60)
 
 pygame.quit()
-
-
-

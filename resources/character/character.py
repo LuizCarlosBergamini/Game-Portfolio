@@ -8,7 +8,7 @@ class Character(pygame.sprite.Sprite):
         super().__init__(group)
         self.player_x = x
         self.player_y = y
-        self.vel = 5
+        self.vel = 3
         self.sheet = Spritesheet()
         self.animation_list = {}
         self.animation_steps = {'idle': 2, 'walk': 6, 'running': 4}
@@ -62,8 +62,8 @@ class NPC(pygame.sprite.Sprite):
         self.sheet = Spritesheet()
         self.npc_idle = pygame.image.load(
             'resources/character/idle spredsheet old vendor.png').convert_alpha()
-        
-    def animation(self):
-        animation = self.sheet.get_image(self.npc_idle, 0, 32, 32, 1, 'azure4', 0)
-        return animation
 
+    def animation(self):
+        animation = self.sheet.get_image(
+            self.npc_idle, 0, 32, 32, 1, 'azure4', 0)
+        return animation
