@@ -5,12 +5,17 @@ from resources.character.character import Character, NPC
 from resources.camera.camera import CameraGroup
 from resources.collision import CollisionHandler
 from resources.map_data.buildings import VegetablesMarket
+import pygame_gui
+from pygame_gui.core import ObjectID
+from UI.UI import UI
 
 # pygame setup
 pygame.init()
-screen = pygame.display.set_mode((1280, 720))
+surface_size = (1280, 720)
+screen = pygame.display.set_mode(surface_size)
 clock = pygame.time.Clock()
 running = True
+
 
 camera_group = CameraGroup()
 # scene setup
@@ -38,11 +43,14 @@ collision_handler.collision_map_layer()
 collision_handler.collision_rects[0].x += 16
 collision_handler.collision_rects[0].y += 16
 
+ui = UI()
+
 scaled_map, scaled_rect = camera_group.scale_map(collision_handler)
 scaled_market, scaled_market_rect = camera_group.scale_market(vegetalMarket)
-scaled_npcs, scaled_npcs_rect = camera_group.scale_npc(npc)
+
 
 while running:
+    time_delta = clock.tick(60)/1000.0
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
@@ -105,6 +113,9 @@ while running:
                 scene.animation_cooldown = 100
                 char.vel = 3
                 shift_pressed = False
+        if event.type == pygame_gui.UI_BUTTON_PRESSED:
+            if event.ui_element == UIButton:
+                print('Test button pressed')
 
     # draw the fps on the screen
     fps = clock.get_fps()
@@ -119,11 +130,15 @@ while running:
     # update the direction of character animation
     char.def_animation_list(direction)
 
-    # update animation
-    frame = scene.handle_animations(char, camera_group.action)
+    # update animation for player
+    frame = scene.handle_player_animations(char, camera_group.action)
 
     # ensures that the frame index is not greater than the number of frames in the animation
     frame %= len(char.animation()[camera_group.action])
+
+    # update animation for npc
+    frame_npc = scene.handle_npc_animations(npc, 'idle')
+    print(f"frame_npc: {frame_npc}")
 
     # handle character movement
     if key_is_pressed:
@@ -135,27 +150,26 @@ while running:
             char.move_down()
         elif last_key_pressed == 'd':
             char.move_right()
-
     # checks for collision
-    collision_handler.check_collision(shift_pressed, direction)
+    # collision_handler.check_collision(shift_pressed, direction)
+
+    # prints the UI
+    ui.draw_question_box()
 
     # RENDER YOUR GAME HERE
     screen.blit(scaled_map, (scaled_rect.x, scaled_rect.y) -
                 camera_group.offset)
 
-    # prints the npcs
-    screen.blit(scaled_npcs, (scaled_npcs_rect.x,
-                scaled_npcs_rect.y) - camera_group.offset)
-
     # prints the markets
     screen.blit(scaled_market, (scaled_market_rect.x,
                 scaled_market_rect.y) - camera_group.offset)
 
-    camera_group.custom_draw(screen, frame, char, fps_text, collision_handler)
+    camera_group.custom_draw(screen, frame, char, fps_text, npc, frame_npc)
+
+    screen.blit(ui.ui_surface, (ui.ui_surface_rect.x,
+                ui.ui_surface_rect.y) - camera_group.offset)
 
     # flip() the display to put your work on screen
     pygame.display.update()
-
-    clock.tick(60)
 
 pygame.quit()

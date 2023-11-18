@@ -1,0 +1,43 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "ui chat box.tmx",
+    "expandedProjectPaths": [
+    ],
+    "fileStates": {
+        "chat_bubbles.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "ui chat box.tmx": {
+            "scale": 2.539270833333333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 239.6357221971531,
+                "y": 159.8884194117406
+            }
+        }
+    },
+    "last.imagePath": "C:/Users/carlo/OneDrive/Área de Trabalho/SmallBurg_UI_pack_v1.03/assets/ui_chat_bubbles",
+    "map.height": 3,
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 16,
+    "map.tileWidth": 16,
+    "map.width": 3,
+    "openFiles": [
+        "ui chat box.tmx",
+        "chat_bubbles.tsx"
+    ],
+    "project": "GUI.tiled-project",
+    "recentFiles": [
+        "chat_bubbles.tsx",
+        "ui chat box.tmx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    }
+}

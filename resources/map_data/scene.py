@@ -28,7 +28,7 @@ class Scene(pygame.sprite.Sprite):
             center=(self.half_width, self.half_height))
         self.surface_size_vector = pygame.math.Vector2(
             self.surface_size)
-        
+
     def center_target_camera(self, target):
         self.offset.x = target.player_x - self.half_width + 15
         self.offset.y = target.player_y - self.half_height + 20
@@ -40,8 +40,17 @@ class Scene(pygame.sprite.Sprite):
 
         return self.layers
 
+    def handle_player_animations(self, sprite, animation_type):
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_update >= self.animation_cooldown:
+            self.frame += 1
+            self.last_update = current_time
+            if self.frame >= sprite.animation_steps[animation_type]:
+                self.frame = 0
 
-    def handle_animations(self, sprite, animation_type):
+        return self.frame
+
+    def handle_npc_animations(self, sprite, animation_type):
         current_time = pygame.time.get_ticks()
         if current_time - self.last_update >= self.animation_cooldown:
             self.frame += 1

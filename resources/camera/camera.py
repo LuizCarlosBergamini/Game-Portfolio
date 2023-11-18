@@ -87,33 +87,21 @@ class CameraGroup(pygame.sprite.Group):
 
         return scaled_surface, scaled_rect
 
-    def scale_npc(self, npc):
-        # NPC
-        self.npc_surface.blit(
-            npc.animation(), (438, 160) - self.offset)
+    def custom_draw(self, screen, frame, char, fps, npc, frame_npc):
 
-        scaled_surface = pygame.transform.scale(
-            self.npc_surface, self.surface_size_vector * self.zoom_scale)
-        scaled_rect = scaled_surface.get_rect(
-            center=(self.half_width, self.half_height))
-
-        return scaled_surface, scaled_rect
-
-    def custom_draw(self, screen, frame, char, fps, collision_handler):
-
-        print(
-            f"char.player_x: {char.player_x}, char.player_y: {char.player_y}")
+        # print(
+        #     f"char.player_x: {char.player_x}, char.player_y: {char.player_y}")
         # setup the game camera
         self.center_target_camera(char)
         self.player_surface.fill((0, 0, 0, 0))
 
+        # NPC
+        self.npc_surface.blit(
+            npc.animation(frame_npc), (npc.npc_x, npc.npc_y) - self.offset)
+
         # prints the player in the self.player_surface
         self.player_surface.blit(
             char.animation()[self.action][frame], (char.player_x, char.player_y) - self.offset)
-
-        # # draw rectangle for collision box of the player
-        # pygame.draw.rect(self.player_surface, (255, 0, 0),
-        #                  collision_handler.player_rect)
 
         # ----- foreground objects block -----
 
