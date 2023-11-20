@@ -43,7 +43,7 @@ collision_handler.collision_map_layer()
 collision_handler.collision_rects[0].x += 16
 collision_handler.collision_rects[0].y += 16
 
-ui = UI()
+ui = UI(char)
 
 scaled_map, scaled_rect = camera_group.scale_map(collision_handler)
 scaled_market, scaled_market_rect = camera_group.scale_market(vegetalMarket)
@@ -60,30 +60,30 @@ while running:
             if event.key == pygame.K_w:
                 camera_group.action = 'walk'
                 key_is_pressed = True
-                scene.animation_cooldown = 100
+                scene.player_animation_cooldown = 100
                 direction = 3
                 last_key_pressed = 'w'
             elif event.key == pygame.K_a:
                 camera_group.action = 'walk'
                 key_is_pressed = True
-                scene.animation_cooldown = 100
+                scene.player_animation_cooldown = 100
                 direction = 1
                 last_key_pressed = 'a'
             elif event.key == pygame.K_s:
                 camera_group.action = 'walk'
                 key_is_pressed = True
-                scene.animation_cooldown = 100
+                scene.player_animation_cooldown = 100
                 direction = 2
                 last_key_pressed = 's'
             elif event.key == pygame.K_d:
                 camera_group.action = 'walk'
                 key_is_pressed = True
-                scene.animation_cooldown = 100
+                scene.player_animation_cooldown = 100
                 direction = 0
                 last_key_pressed = 'd'
             elif event.key == pygame.K_LSHIFT and key_is_pressed:
                 camera_group.action = 'running'
-                scene.animation_cooldown = 100
+                scene.player_animation_cooldown = 100
                 char.vel = 6
                 shift_pressed = True
 
@@ -91,31 +91,28 @@ while running:
             if event.key == pygame.K_w:
                 camera_group.action = 'idle'
                 key_is_pressed = False
-                scene.animation_cooldown = 300
+                scene.player_animation_cooldown = 300
                 direction = 3
             elif event.key == pygame.K_a:
                 camera_group.action = 'idle'
                 key_is_pressed = False
-                scene.animation_cooldown = 300
+                scene.player_animation_cooldown = 300
                 direction = 1
             elif event.key == pygame.K_s:
                 camera_group.action = 'idle'
                 key_is_pressed = False
-                scene.animation_cooldown = 300
+                scene.player_animation_cooldown = 300
                 direction = 2
             elif event.key == pygame.K_d:
                 camera_group.action = 'idle'
                 key_is_pressed = False
-                scene.animation_cooldown = 300
+                scene.player_animation_cooldown = 300
                 direction = 0
             elif event.key == pygame.K_LSHIFT:
                 camera_group.action = 'walk'
-                scene.animation_cooldown = 100
+                scene.player_animation_cooldown = 100
                 char.vel = 3
                 shift_pressed = False
-        if event.type == pygame_gui.UI_BUTTON_PRESSED:
-            if event.ui_element == UIButton:
-                print('Test button pressed')
 
     # draw the fps on the screen
     fps = clock.get_fps()
@@ -136,10 +133,6 @@ while running:
     # ensures that the frame index is not greater than the number of frames in the animation
     frame %= len(char.animation()[camera_group.action])
 
-    # update animation for npc
-    frame_npc = scene.handle_npc_animations(npc, 'idle')
-    print(f"frame_npc: {frame_npc}")
-
     # handle character movement
     if key_is_pressed:
         if last_key_pressed == 'w':
@@ -150,8 +143,9 @@ while running:
             char.move_down()
         elif last_key_pressed == 'd':
             char.move_right()
+
     # checks for collision
-    # collision_handler.check_collision(shift_pressed, direction)
+    collision_handler.check_collision(shift_pressed, direction)
 
     # prints the UI
     ui.draw_question_box()
@@ -160,11 +154,19 @@ while running:
     screen.blit(scaled_map, (scaled_rect.x, scaled_rect.y) -
                 camera_group.offset)
 
+    # NPC
+    # update animation for npc
+    frame_npc = scene.handle_npc_animations(npc, 'idle')
+
+    # shows npc on screen
+    screen.blit(
+        npc.animation(frame_npc, camera_group.zoom_scale), (npc.npc_x, npc.npc_y) - camera_group.offset)
+
     # prints the markets
     screen.blit(scaled_market, (scaled_market_rect.x,
                 scaled_market_rect.y) - camera_group.offset)
 
-    camera_group.custom_draw(screen, frame, char, fps_text, npc, frame_npc)
+    camera_group.custom_draw(screen, frame, char, fps_text)
 
     screen.blit(ui.ui_surface, (ui.ui_surface_rect.x,
                 ui.ui_surface_rect.y) - camera_group.offset)

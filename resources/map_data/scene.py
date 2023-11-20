@@ -9,9 +9,16 @@ class Scene(pygame.sprite.Sprite):
         self.layers = {}
         self.tmx_data = pytmx.util_pygame.load_pygame(
             "util/Portfolio Game Map.tmx")
-        self.animation_cooldown = 300
-        self.frame = 0
-        self.last_update = pygame.time.get_ticks()
+
+        # Player variables
+        self.player_animation_cooldown = 300
+        self.player_frame = 0
+        self.last_update_player = pygame.time.get_ticks()
+
+        # NPC variables
+        self.npc_animation_cooldown = 300
+        self.npc_frame = 0
+        self.last_update_npc = pygame.time.get_ticks()
 
         self.display_surface = pygame.display.get_surface()
         self.half_width = self.display_surface.get_width() // 2
@@ -42,20 +49,23 @@ class Scene(pygame.sprite.Sprite):
 
     def handle_player_animations(self, sprite, animation_type):
         current_time = pygame.time.get_ticks()
-        if current_time - self.last_update >= self.animation_cooldown:
-            self.frame += 1
-            self.last_update = current_time
-            if self.frame >= sprite.animation_steps[animation_type]:
-                self.frame = 0
+        if current_time - self.last_update_player >= self.player_animation_cooldown:
+            self.player_frame += 1
+            self.last_update_player = current_time
+            if self.player_frame >= sprite.animation_steps[animation_type]:
+                self.player_frame = 0
 
-        return self.frame
+        return self.player_frame
 
     def handle_npc_animations(self, sprite, animation_type):
         current_time = pygame.time.get_ticks()
-        if current_time - self.last_update >= self.animation_cooldown:
-            self.frame += 1
-            self.last_update = current_time
-            if self.frame >= sprite.animation_steps[animation_type]:
-                self.frame = 0
+        if current_time - self.last_update_npc >= self.npc_animation_cooldown:
+            self.npc_frame += 1
+            self.last_update_npc = current_time
+            # Debug line
+            # print(
+            #     f"npc_frame: {self.npc_frame}, animation_steps: {sprite.animation_steps[animation_type]}")
+            if self.npc_frame >= sprite.animation_steps[animation_type]:
+                self.npc_frame = 0
 
-        return self.frame
+        return self.npc_frame

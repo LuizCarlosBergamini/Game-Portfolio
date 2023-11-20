@@ -87,17 +87,13 @@ class CameraGroup(pygame.sprite.Group):
 
         return scaled_surface, scaled_rect
 
-    def custom_draw(self, screen, frame, char, fps, npc, frame_npc):
+    def custom_draw(self, screen, frame, char, fps):
 
-        # print(
-        #     f"char.player_x: {char.player_x}, char.player_y: {char.player_y}")
+        print(
+            f"char.player_x: {char.player_x}, char.player_y: {char.player_y}")
         # setup the game camera
         self.center_target_camera(char)
         self.player_surface.fill((0, 0, 0, 0))
-
-        # NPC
-        self.npc_surface.blit(
-            npc.animation(frame_npc), (npc.npc_x, npc.npc_y) - self.offset)
 
         # prints the player in the self.player_surface
         self.player_surface.blit(

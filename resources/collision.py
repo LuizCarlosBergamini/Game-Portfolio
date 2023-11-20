@@ -37,7 +37,7 @@ class CollisionHandler:
     def check_collision(self, shift_pressed, direction):
         for rect in self.collision_map_layer():
             if self.player_rect.colliderect(rect):
-                print('colide')
+                # print('colide')
                 match direction:
                     case 0:
                         if shift_pressed:
