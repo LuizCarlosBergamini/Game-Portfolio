@@ -6,15 +6,13 @@ class CollisionHandler:
         self.camera = camera
         self.char = char
         self.player_rect = pygame.Rect(
-            char.player_x, char.player_y, 11, 8)
+            char.player_x, char.player_y, 45, 32)
         self.tmx_data = self.camera.scene.tmx_data
         self.collision_rects = []
 
     def update_player_collision_box(self):
-        self.player_rect.x = self.char.player_x - self.camera.offset.x + 10
+        self.player_rect.x = self.char.player_x - self.camera.offset.x - 5
         self.player_rect.y = self.char.player_y - self.camera.offset.y + 16
-
-    import pygame
 
     def collision_map_layer(self):
         collision_layer = self.tmx_data.get_layer_by_name('collision')

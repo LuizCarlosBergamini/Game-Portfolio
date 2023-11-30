@@ -3,10 +3,52 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "ui chat box.tmx",
+    "activeFile": "C:/Users/carlo/OneDrive/Área de Trabalho/Portfolio Game/Pygame Version/util/Portfolio Game Map.tmx",
     "expandedProjectPaths": [
     ],
+    "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
+        "C:/Users/carlo/OneDrive/Área de Trabalho/Portfolio Game/Pygame Version/util/Portfolio Game Map.tmx": {
+            "expandedGroupLayers": [
+                5
+            ],
+            "scale": 2,
+            "selectedLayer": 21,
+            "viewCenter": {
+                "x": 360.75,
+                "y": 251
+            }
+        },
+        "C:/Users/carlo/OneDrive/Área de Trabalho/Portfolio Game/Pygame Version/util/Portfolio Game.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/carlo/OneDrive/Área de Trabalho/Portfolio Game/Pygame Version/util/collision.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/carlo/OneDrive/Área de Trabalho/Portfolio Game/Pygame Version/util/commerce_marketplace_stall.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/carlo/OneDrive/Área de Trabalho/Portfolio Game/Pygame Version/util/fishing market.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/carlo/OneDrive/Área de Trabalho/Portfolio Game/Pygame Version/util/house building with shadow.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/carlo/OneDrive/Área de Trabalho/Portfolio Game/Pygame Version/util/house_doors.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/carlo/OneDrive/Área de Trabalho/Portfolio Game/Pygame Version/util/houses2.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/carlo/OneDrive/Área de Trabalho/Portfolio Game/Pygame Version/util/housing_system_roofs.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/carlo/OneDrive/Área de Trabalho/Portfolio Game/Pygame Version/util/terrain no shadow.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/carlo/OneDrive/Área de Trabalho/Portfolio Game/Pygame Version/util/vegetation with shadows.tsx": {
+            "scaleInDock": 1
+        },
         "chat_bubbles.tsx": {
             "scaleInDock": 1,
             "scaleInEditor": 1
@@ -15,7 +57,7 @@
             "scale": 2.539270833333333,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 239.6357221971531,
+                "x": 239.24190835623747,
                 "y": 159.8884194117406
             }
         }
@@ -28,12 +70,14 @@
     "map.width": 3,
     "openFiles": [
         "ui chat box.tmx",
-        "chat_bubbles.tsx"
+        "chat_bubbles.tsx",
+        "C:/Users/carlo/OneDrive/Área de Trabalho/Portfolio Game/Pygame Version/util/Portfolio Game Map.tmx"
     ],
     "project": "GUI.tiled-project",
     "recentFiles": [
+        "ui chat box.tmx",
         "chat_bubbles.tsx",
-        "ui chat box.tmx"
+        "C:/Users/carlo/OneDrive/Área de Trabalho/Portfolio Game/Pygame Version/util/Portfolio Game Map.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {

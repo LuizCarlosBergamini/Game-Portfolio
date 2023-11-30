@@ -23,6 +23,11 @@ class CameraGroup(pygame.sprite.Group):
         self.map_surface = pygame.Surface(
             self.surface_size, pygame.SRCALPHA)
 
+        # foreground
+        self.foreground_surface = pygame.Surface(
+            self.surface_size, pygame.SRCALPHA)
+        self.foreground_surface.set_colorkey((0, 0, 0))
+
         # market surface
         self.market_surface = pygame.Surface(
             self.surface_size, pygame.SRCALPHA)
@@ -37,11 +42,6 @@ class CameraGroup(pygame.sprite.Group):
             self.surface_size, pygame.SRCALPHA)
         self.npc_surface.set_colorkey((0, 0, 0))
 
-        # collision surface
-        self.collision_surface = pygame.Surface(
-            self.surface_size, pygame.SRCALPHA)
-        self.collision_surface.set_colorkey((0, 0, 0))
-
         self.rect = self.player_surface.get_rect(
             center=(self.half_width, self.half_height))
         self.surface_size_vector = pygame.math.Vector2(
@@ -55,20 +55,31 @@ class CameraGroup(pygame.sprite.Group):
         self.offset.x = target.player_x - self.half_width + 15
         self.offset.y = target.player_y - self.half_height + 20
 
-    def scale_map(self, collision_handler):
+    def scale_map(self, map):
         # draw map
-        for layer_name, layer in self.scene.load_map().items():
+        for layer_name, layer in map.items():
             if isinstance(layer, pytmx.TiledTileLayer):
                 for x, y, image in layer.tiles():
                     self.map_surface.blit(image, ((x * self.scene.tmx_data.tilewidth,
-                                                   y * self.scene.tmx_data.tileheight) - self.offset))
-
-        # for rect in collision_handler.collision_map_layer():
-        #     pygame.draw.rect(self.map_surface, (255, 0, 0),
-        #                      rect)
+                                                   y * self.scene.tmx_data.tileheight)))
 
         scaled_surface = pygame.transform.scale(
             self.map_surface, self.surface_size_vector * self.zoom_scale)
+        scaled_rect = scaled_surface.get_rect(
+            center=(self.half_width, self.half_height))
+
+        return scaled_surface, scaled_rect
+
+    def forest_objects(self, forest):
+        # draw foreground objects
+        for layer in forest:
+            if isinstance(layer, pytmx.TiledTileLayer):
+                for x, y, image in layer.tiles():
+                    self.foreground_surface.blit(image, ((x * self.scene.tmx_data.tilewidth,
+                                                          y * self.scene.tmx_data.tileheight)))
+
+        scaled_surface = pygame.transform.scale(
+            self.foreground_surface, self.surface_size_vector * self.zoom_scale)
         scaled_rect = scaled_surface.get_rect(
             center=(self.half_width, self.half_height))
 
@@ -89,10 +100,8 @@ class CameraGroup(pygame.sprite.Group):
 
     def custom_draw(self, screen, frame, char, fps):
 
-        print(
-            f"char.player_x: {char.player_x}, char.player_y: {char.player_y}")
-        # setup the game camera
-        self.center_target_camera(char)
+        # print(
+        #     f"char.player_x: {char.player_x}, char.player_y: {char.player_y}")
         self.player_surface.fill((0, 0, 0, 0))
 
         # prints the player in the self.player_surface

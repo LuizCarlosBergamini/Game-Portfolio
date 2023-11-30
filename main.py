@@ -21,7 +21,8 @@ camera_group = CameraGroup()
 # scene setup
 scene = Scene(camera_group)
 # loads the map for posterior drawing
-scene.load_map()
+map = scene.load_map()
+forest = scene.load_forest()
 # character setup
 char = Character(-435, -872, camera_group)
 direction = 2
@@ -45,8 +46,9 @@ collision_handler.collision_rects[0].y += 16
 
 ui = UI(char)
 
-scaled_map, scaled_rect = camera_group.scale_map(collision_handler)
+scaled_map, scaled_rect = camera_group.scale_map(map)
 scaled_market, scaled_market_rect = camera_group.scale_market(vegetalMarket)
+scaled_forest, scaled_forest_rect = camera_group.forest_objects(forest)
 
 
 while running:
@@ -86,7 +88,6 @@ while running:
                 scene.player_animation_cooldown = 100
                 char.vel = 6
                 shift_pressed = True
-
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_w:
                 camera_group.action = 'idle'
@@ -147,12 +148,19 @@ while running:
     # checks for collision
     collision_handler.check_collision(shift_pressed, direction)
 
+    # setup the game camera
+    camera_group.center_target_camera(char)
+
     # prints the UI
     ui.draw_question_box()
 
     # RENDER YOUR GAME HERE
     screen.blit(scaled_map, (scaled_rect.x, scaled_rect.y) -
                 camera_group.offset)
+
+    # print collision
+    # for rect in collision_handler.collision_rects:
+    #     pygame.draw.rect(screen, (255, 0, 0), rect)
 
     # NPC
     # update animation for npc
@@ -167,6 +175,12 @@ while running:
                 scaled_market_rect.y) - camera_group.offset)
 
     camera_group.custom_draw(screen, frame, char, fps_text)
+
+    # print player collision
+    # pygame.draw.rect(screen, (255, 0, 0), collision_handler.player_rect)
+
+    screen.blit(scaled_forest, (scaled_forest_rect.x,
+                scaled_forest_rect.y) - camera_group.offset)
 
     screen.blit(ui.ui_surface, (ui.ui_surface_rect.x,
                 ui.ui_surface_rect.y) - camera_group.offset)

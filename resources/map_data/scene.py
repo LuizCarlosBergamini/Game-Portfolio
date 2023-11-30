@@ -7,6 +7,7 @@ class Scene(pygame.sprite.Sprite):
         super().__init__(group)
         self.group = group
         self.layers = {}
+        self.forest_layers = []
         self.tmx_data = pytmx.util_pygame.load_pygame(
             "util/Portfolio Game Map.tmx")
 
@@ -46,6 +47,14 @@ class Scene(pygame.sprite.Sprite):
                 layer.name)
 
         return self.layers
+
+    def load_forest(self):
+        self.forest_layers.append(self.tmx_data.get_layer_by_name(
+            'foreground trees'))
+        self.forest_layers.append(self.tmx_data.get_layer_by_name(
+            'foreground objects'))
+
+        return self.forest_layers
 
     def handle_player_animations(self, sprite, animation_type):
         current_time = pygame.time.get_ticks()
